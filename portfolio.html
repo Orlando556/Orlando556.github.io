@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alexis Gaudiere // Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Jura:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Palette P3R strictement centrée sur le bleu */
+            --p3-bg-base: #010414;     /* Fond très sombre */
+            --p3-blue-dark: #030a2a;    /* Rayures du fond */
+            --p3-blue-mid: #001966;     /* Panneaux d'arrière-plan */
+            --p3-blue-vibrant: #0033cc; /* Bleu électrique (façon boîtes de dialogue) */
+            --p3-cyan: #00ffff;         /* Accentuation principale */
+            --p3-cyan-dim: rgba(0, 255, 255, 0.6);
+            --p3-white: #ffffff;
+            --p3-black: #000000;
+            --p3-yellow: #ffe600;       /* Accentuation secondaire légère (façon SP) */
+            
+            --font-p3-title: 'Righteous', sans-serif;
+            --font-p3-ui: 'Jura', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-p3-ui);
+            background-color: var(--p3-bg-base);
+            color: var(--p3-white);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: repeating-linear-gradient(
+                -45deg,
+                var(--p3-bg-base),
+                var(--p3-bg-base) 100px,
+                var(--p3-blue-dark) 100px,
+                var(--p3-blue-dark) 200px
+            );
+        }
+
+        /* Barre de navigation Sticky */
+        .p3r-sticky-nav {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(1, 4, 20, 0.95);
+            border-bottom: 3px solid var(--p3-cyan);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .p3r-sticky-nav a {
+            color: var(--p3-cyan);
+            text-decoration: none;
+            font-family: var(--font-p3-title);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .p3r-sticky-nav a:hover {
+            color: var(--p3-white);
+            text-shadow: 0 0 10px var(--p3-cyan);
+            transform: skewX(-10deg);
+        }
+
+        .p3r-sticky-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background-color: var(--p3-white); /* Remplacement du rose par du blanc */
+            transition: width 0.3s ease;
+            box-shadow: 0 0 5px var(--p3-cyan);
+        }
+
+        .p3r-sticky-nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Grand texte d'arrière-plan */
+        .p3r-bg-huge-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-10deg);
+            font-family: var(--font-p3-title);
+            font-size: 25vw;
+            color: rgba(0, 255, 255, 0.02);
+            text-transform: uppercase;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+            font-style: italic;
+        }
+
+        /* Layout Principal */
+        .p3r-wrapper {
+            max-width: 1000px;
+            margin: 40px auto 80px auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+        }
+
+        /* En-tête de section biseauté */
+        .p3r-section-header {
+            font-family: var(--font-p3-title);
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            color: var(--p3-white);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-shadow: 3px 3px 0px var(--p3-blue-vibrant);
+        }
+
+        .p3r-section-header::before {
+            content: '';
+            display: block;
+            width: 12px;
+            height: 40px;
+            background-color: var(--p3-cyan);
+            transform: skewX(-20deg);
+            box-shadow: 2px 2px 0 var(--p3-blue-vibrant);
+        }
+
+        /* Style de liste façon "DICTIONARY" / Menu objets */
+        .p3r-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .p3r-list-item {
+            background: rgba(0, 51, 204, 0.15);
+            padding: 15px 25px;
+            color: var(--p3-cyan);
+            cursor: pointer;
+            transition: all 0.1s ease;
+            position: relative;
+            border-left: 4px solid transparent;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border: 1px solid rgba(0, 255, 255, 0.05);
+        }
+
+        .p3r-list-item::before {
+            content: '•';
+            position: absolute;
+            left: 10px;
+            top: 15px;
+            color: var(--p3-cyan);
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .p3r-list-item-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-left: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--p3-white);
+        }
+
+        .p3r-list-item-desc {
+            margin-left: 15px;
+            font-size: 1rem;
+            color: var(--p3-cyan-dim);
+            line-height: 1.4;
+        }
+
+        .p3r-tag {
+            display: inline-block;
+            background: var(--p3-blue-mid);
+            color: var(--p3-cyan);
+            padding: 2px 8px;
+            font-size: 0.8rem;
+            margin-left: auto;
+            transform: skewX(-15deg);
+            border: 1px solid var(--p3-cyan);
+        }
+
+        /* Effet de sélection sans rouge : fond blanc, bordure bleu vibrant, texte noir/bleu */
+        .p3r-list-item:hover {
+            background: var(--p3-white);
+            color: var(--p3-black);
+            transform: translateX(20px);
+            border-bottom: 4px solid var(--p3-blue-vibrant);
+            border-left: none;
+            box-shadow: -10px 10px 0px rgba(0, 51, 204, 0.3);
+            z-index: 10;
+        }
+
+        .p3r-list-item:hover::before {
+            color: var(--p3-blue-vibrant);
+        }
+
+        .p3r-list-item:hover .p3r-list-item-title {
+            color: var(--p3-black);
+        }
+
+        .p3r-list-item:hover .p3r-list-item-desc {
+            color: #222;
+        }
+
+        .p3r-list-item:hover .p3r-tag {
+            background: var(--p3-blue-vibrant);
+            color: var(--p3-white);
+            border-color: var(--p3-blue-vibrant);
+        }
+
+        /* Panneau de profil principal */
+        .p3r-hero-panel {
+            background: var(--p3-blue-mid);
+            padding: 40px;
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%);
+            border: 2px solid var(--p3-cyan);
+            box-shadow: 10px 10px 0px rgba(0, 255, 255, 0.1);
+        }
+
+        .p3r-hero-name {
+            font-family: var(--font-p3-title);
+            font-size: 4rem;
+            line-height: 1;
+            margin-bottom: 10px;
+            text-shadow: 4px 4px 0px var(--p3-black);
+        }
+
+        .p3r-hero-subtitle {
+            color: var(--p3-cyan);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .p3r-highlight-box {
+            background: var(--p3-blue-vibrant); /* Remplacement du rose par le bleu électrique */
+            color: var(--p3-white);
+            padding: 20px;
+            margin-top: 20px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            transform: skewX(-5deg);
+            border-left: 8px solid var(--p3-cyan);
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Grille de compétences (Tags) */
+        .p3r-skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .p3r-skill-badge {
+            background: rgba(0, 255, 255, 0.05);
+            border: 2px solid var(--p3-cyan);
+            color: var(--p3-cyan);
+            padding: 10px 25px;
+            font-family: var(--font-p3-title);
+            font-size: 1.2rem;
+            transform: skewX(-15deg);
+            transition: all 0.2s ease;
+            cursor: default;
+        }
+
+        .p3r-skill-badge:hover {
+            background: var(--p3-cyan);
+            color: var(--p3-black);
+            box-shadow: 0 0 15px var(--p3-cyan);
+        }
+
+        @media (max-width: 768px) {
+            .p3r-sticky-nav { flex-wrap: wrap; gap: 15px; padding: 10px; }
+            .p3r-hero-name { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="p3r-sticky-nav">
+        <a href="#profil">Profil</a>
+        <a href="#competences">Compétences</a>
+        <a href="#projets">Projets</a>
+        <a href="#formations">Formations</a>
+		<a href="#contact">Contact</a>
+    </nav>
+
+
+
+    <main class="p3r-wrapper">
+        
+        <section id="profil">
+            <div class="p3r-hero-panel">
+                <div class="p3r-hero-name">Alexis Gaudiere</div>
+                <div class="p3r-hero-subtitle">ÉTUDIANT EN BUT INFO // IUT DE MARNE LA VALLÉE</div>
+                
+                <div class="p3r-highlight-box">
+                    "Je cherche à améliorer mes compétences en informatiques, mais si possible, je préférai accomplir des missions en rapport aux systèmes embarqués."
+                    <br><br>
+                    <span style="color:var(--p3-black); background: var(--p3-cyan); padding: 2px 8px; font-size: 0.9rem;">
+                        RECHERCHE CONTRAT D'APPRENTISSAGE (19-24 MOIS)
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <section id="competences">
+            <h2 class="p3r-section-header">Compétences</h2>
+            
+            <div class="p3r-skills-container" style="margin-bottom: 30px;">
+                <div class="p3r-skill-badge">C</div>
+                <div class="p3r-skill-badge">HTML-CSS</div>
+                <div class="p3r-skill-badge">PHP</div>
+				<div class="p3r-skill-badge">Java</div>
+                <div class="p3r-skill-badge">Python</div>
+                <div class="p3r-skill-badge">SQL</div>
+            </div>
+
+            <div class="p3r-list">
+                <div class="p3r-list-item">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="p3r-list-item-title">Bases de données</span>
+                    </div>
+                    <div class="p3r-list-item-desc">
+                        - Création d'une base de donnée selon un cahier des charges<br>
+                        - Création et compréhension de schémas MCD et MLD<br>
+                        - Bases en SQL pour chercher et extraire des informations<br>
+						- Création et lancement de serveurs postgresql comme back end fonctionnel d'un site
+                    </div>
+                </div>
+                
+                <div class="p3r-list-item">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="p3r-list-item-title">Systèmes & Réseaux</span>
+                    </div>
+                    <div class="p3r-list-item-desc">
+                        - Assemblage de systèmes avec microprocesseur sur plaque à essai<br>
+                        - Etablir un réseau de machines connectés avec un serveur DHCP<br>
+                        - Usage de tableurs excel avancé (statistiques et données)
+                    </div>
+                </div>
+                
+                <div class="p3r-list-item">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="p3r-list-item-title">Atouts Transverses</span>
+                    </div>
+                    <div class="p3r-list-item-desc">
+                        - Capacité à travailler en équipe et collaboration interservices<br>
+                        - Adaptabilité et gestion du changement
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projets">
+            <h2 class="p3r-section-header">Missions & Projets</h2>
+            <div class="p3r-list">
+                <div class="p3r-list-item">
+                    <div style="display: flex; align-items: center;">
+                        <a href="echantillonBDD.rar" download="echantillonBDD.rar">
+						<span class="p3r-list-item-title">Projet Base de données</span>
+                        <span class="p3r-tag">2025-2026</span>
+                    </div>
+                    <div class="p3r-list-item-desc">
+                        Concevoir une base de données pour répondre à des besoins spécifiques, puis réalisation d'un site web complet avec front end et back end connectées répondant au besoin.
+                    </div>
+                </div>
+				</a>
+				
+				<a href="echantillonDHCP.rar" download="echantillonDHCP.rar">
+				<div class="p3r-list-item">
+                    <div style="display: flex; align-items: center;">
+                        <span class="p3r-list-item-title">Serveur DHCP</span>
+                        <span class="p3r-tag">2025-2026</span>
+                    </div>
+                    <div class="p3r-list-item-desc">
+                        Configuration d'un serveur DHCP qui peut automatiquement assigner des addresses IP à des machines connectées au serveur en question.
+                    </div>
+                </div>
+				</a>
+				
+				<a href="echantillonUNESCO.rar" download="echantillonUNESCO.rar">
+				<div class="p3r-list-item">
+                    <div style="display: flex; align-items: center;">
+                        <span class="p3r-list-item-title">Projet Unesco</span>
+                        <span class="p3r-tag">2025-2026</span>
+                    </div>
+                    <div class="p3r-list-item-desc">
+                        Mener à bien la réalisation d'un site web et des livrables intermédiaires précis afin de valoriser un patrimoine mondial.
+                    </div>
+                </div>
+				</a>
+
+                <div class="p3r-list-item">
+                    <div style="display: flex; align-items: center;">
+                        <span class="p3r-list-item-title">Projet Wall Is You</span>
+                        <span class="p3r-tag">2025-2026</span>
+                    </div>
+                    <div class="p3r-list-item-desc">
+                        Développer un jeu selon un cahier des charges pré-défini en Python.
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="formations">
+            <h2 class="p3r-section-header">Formations & Extras</h2>
+            <div class="p3r-list">
+                <div class="p3r-list-item">
+                    <div style="display: flex; align-items: center;">
+                        <span class="p3r-list-item-title">BUT Informatique</span>
+                        <span class="p3r-tag">Depuis Sept. 2025</span>
+                    </div>
+                    <div class="p3r-list-item-desc">Université Gustave Eiffel, Champs-Sur-Marne</div>
+                </div>
+
+                <div class="p3r-list-item">
+                    <div style="display: flex; align-items: center;">
+                        <span class="p3r-list-item-title">Bac STI2D</span>
+                        <span class="p3r-tag">2022 - 2025</span>
+                    </div>
+                    <div class="p3r-list-item-desc">Lycée Langevin Wallon, Champigny-sur-Marne</div>
+                </div>
+
+                <div class="p3r-list-item">
+                    <div style="display: flex; align-items: center;">
+                        <span class="p3r-list-item-title">Anglais</span>
+                    </div>
+                    <div class="p3r-list-item-desc">Niveau C1 - Niveau autonome</div>
+                </div>
+				
+				<a href="CV_2026-05-20_Alexis_Gaudiere.pdf" download="CV_2026-05-20_Alexis_Gaudiere.pdf">
+				<div class="p3r-list-item">
+                    <div style="display: flex; align-items: center;">
+                        <span class="p3r-list-item-title">CV</span>
+                    </div>
+                    <div class="p3r-list-item-desc">CV en format .pdf</div>
+                </div>
+				</a>
+				
+            </div>
+        </section>
+		
+		<section id="contact">
+            <h2 class="p3r-section-header">Contact</h2>
+            <div class="p3r-list">
+                <div class="p3r-list-item">
+                    <div style="display: flex; align-items: center;">
+                        <span class="p3r-list-item-title">Email</span>
+                        <span class="p3r-tag">PRO</span>
+                    </div>
+                    <div class="p3r-list-item-desc">gaudierealexis@gmail.com</div>
+                </div>
+
+                <div class="p3r-list-item">
+                    <div style="display: flex; align-items: center;">
+                        <span class="p3r-list-item-title">Téléphone</span>
+                        <span class="p3r-tag">MOB</span>
+                    </div>
+                    <div class="p3r-list-item-desc">07 72 03 69 38</div>
+                </div>
+
+                <div class="p3r-list-item">
+                    <div style="display: flex; align-items: center;">
+                        <span class="p3r-list-item-title">Localisation</span>
+                        <span class="p3r-tag">LOC</span>
+                    </div>
+                    <div class="p3r-list-item-desc">Champigny-sur-Marne (94500) / Champs-Sur-Marne</div>
+                </div>
+
+                <div class="p3r-list-item">
+                    <div style="display: flex; align-items: center;">
+                        <span class="p3r-list-item-title">Réseaux</span>
+                        <span class="p3r-tag">LINK</span>
+                    </div>
+                    <div class="p3r-list-item-desc">LinkedIn: in @Alexis Gaudiere</div>
+                </div>
+                
+                <div class="p3r-list-item">
+                    <div style="display: flex; align-items: center;">
+                        <span class="p3r-list-item-title">Informations Personnelles</span>
+                    </div>
+                    <div class="p3r-list-item-desc">Né le 02/01/2007</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+</body>
+</html>
